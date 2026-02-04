@@ -1,0 +1,108 @@
+/* Custom styles */
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Sizes card gradient */
+.hero-info-card-sizes {
+  background: linear-gradient(97.36deg, #976431 -4.11%, #b28254 106.33%);
+}
+
+/* Enquire Now button gradient */
+.btn-enquire {
+  background: linear-gradient(97.36deg, #976431 -4.11%, #b28254 106.33%);
+}
+
+/* Overview section Download Brochure button */
+.btn-overview-solid {
+  background: linear-gradient(97.36deg, #976431 -4.11%, #b28254 106.33%);
+}
+
+/* Overview property details card - light brown/gold border & shadow */
+.overview-property-card {
+  background: #fff;
+  border: 1px solid #e8dfd0;
+  box-shadow: 0 2px 12px rgba(151, 100, 49, 0.06);
+}
+
+/* Overview stats separator - light brown/gold */
+.overview-stat-line {
+  background: #FADEC3;
+  ;
+}
+
+/* Overview right column - city image aligned right on desktop */
+@media (min-width: 1024px) {
+  .overview-right-col .aspect-square {
+    margin-left: auto;
+  }
+}
+
+/* RERA & QR Code container - Figma layout */
+.rera-qr-container {
+  width: 456px;
+  height: 111px;
+  top: 105px;
+}
+
+.rera-qr-text {
+  width: 404px;
+  min-height: 45px;
+}
+
+.rera-qr-img {
+  width: 45px;
+  height: 45px;
+}
+
+@media (max-width: 1024px) {
+  .rera-qr-container {
+    width: auto;
+    height: auto;
+    top: 5rem;
+  }
+
+  .rera-qr-text {
+    width: 160px;
+    max-width: 220px;
+    height: auto;
+  }
+
+  .rera-qr-img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Hero info cards - responsive sizing */
+@media (max-width: 640px) {
+  .hero-info-cards .hero-info-card {
+    width: 160px;
+    height: 65px;
+    min-width: 160px;
+  }
+}
+
+/* Highlights slider - JS sets width to fill container */
+.highlights-slide-width {
+  min-width: 200px;
+}
+
+/* Specifications list bullet */
+.spec-bullet {
+  width: 6px;
+  height: 6px;
+  background: #000;
+  border-radius: 50%;
+}
+
+/* Amenities slider - JS sets width to fill container */
+.amenities-slide-width {
+  min-width: 200px;
+}
