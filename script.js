@@ -1,3 +1,33 @@
+// Register GSAP ScrollTrigger
+gsap.registerPlugin(ScrollTrigger);
+
+// Eldeco stats counter animation - runs when section scrolls into view
+function initEldecoStatsCounter() {
+  const section = document.getElementById('eldeco-group');
+  const statEls = document.querySelectorAll('.eldeco-stat-num');
+  if (!section || !statEls.length) return;
+
+  statEls.forEach((el) => {
+    const target = parseInt(el.getAttribute('data-count'), 10);
+    const suffix = el.getAttribute('data-suffix') || '';
+    const obj = { value: 0 };
+
+    gsap.to(obj, {
+      value: target,
+      duration: 2,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 80%',
+        once: true,
+      },
+      onUpdate: () => {
+        el.textContent = Math.round(obj.value).toLocaleString('en-IN') + suffix;
+      },
+    });
+  });
+}
+
 // Initialize Lenis smooth scroll
 const lenis = new Lenis({
   duration: 1.2,
@@ -17,6 +47,8 @@ function raf(time) {
 requestAnimationFrame(raf);
 
 document.addEventListener('DOMContentLoaded', () => {
+  initEldecoStatsCounter();
+
   // Navbar Elements
   const navbar = document.getElementById('navbar');
   const mobileNavbar = document.getElementById('mobile-navbar');
@@ -50,7 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  lenis.on('scroll', handleNavbarScroll);
+  lenis.on('scroll', (e) => {
+    handleNavbarScroll();
+    ScrollTrigger.update();
+  });
   window.addEventListener('scroll', handleNavbarScroll);
   handleNavbarScroll();
 
@@ -164,46 +199,70 @@ document.addEventListener('DOMContentLoaded', () => {
     startSlider();
   }
 
+
+
   // Highlights Slider - right button only, manual click, loop back to slide 1 from slide 3
-  const highlightsSlider = document.querySelector('.highlights-slider');
-  const highlightsTrack = document.querySelector('.highlights-track');
-  const highlightsSlides = document.querySelectorAll('.highlights-slide');
-  const highlightsNext = document.getElementById('highlights-next');
-  let highlightsIndex = 0;
-  const gap = 24;
+const highlightsSlider = document.querySelector('.highlights-slider');
+const highlightsTrack = document.querySelector('.highlights-track');
+const highlightsSlides = document.querySelectorAll('.highlights-slide');
+const highlightsNext = document.getElementById('highlights-next');
 
-  function setHighlightsSlideWidth() {
-    if (!highlightsSlider || !highlightsSlides.length) return;
-    const containerWidth = highlightsSlider.offsetWidth;
-    const visibleCount = containerWidth >= 1024 ? 3 : containerWidth >= 640 ? 2 : 1;
-    const slideWidth = (containerWidth - (visibleCount - 1) * gap) / visibleCount;
-    highlightsSlides.forEach((slide) => {
-      slide.style.width = `${slideWidth}px`;
-    });
+let highlightsIndex = 0;
+let visibleCount = 3;
+const gap = 24;
+
+function getVisibleCount() {
+  const containerWidth = highlightsSlider.offsetWidth;
+  return containerWidth >= 1024 ? 3 : containerWidth >= 640 ? 2 : 1;
+}
+
+function setHighlightsSlideWidth() {
+  if (!highlightsSlider || !highlightsSlides.length) return;
+
+  visibleCount = getVisibleCount();
+
+  const containerWidth = highlightsSlider.offsetWidth;
+  const slideWidth = (containerWidth - (visibleCount - 1) * gap) / visibleCount;
+
+  highlightsSlides.forEach((slide) => {
+    slide.style.width = `${slideWidth}px`;
+  });
+}
+
+function updateHighlightsSlider() {
+  if (!highlightsTrack || !highlightsSlides.length) return;
+
+  const slideWidth = highlightsSlides[0].offsetWidth + gap;
+  highlightsTrack.style.transform = `translateX(-${highlightsIndex * slideWidth}px)`;
+}
+
+function nextHighlightsSlide() {
+  const maxIndex = highlightsSlides.length - visibleCount;
+
+  if (highlightsIndex >= maxIndex) {
+    highlightsIndex = 0; // loop back
+  } else {
+    highlightsIndex++;
   }
 
-  function updateHighlightsSlider() {
-    if (!highlightsTrack || !highlightsSlides.length) return;
-    const slide = highlightsSlides[0];
-    const slideWidth = slide.offsetWidth + gap;
-    highlightsTrack.style.transform = `translateX(-${highlightsIndex * slideWidth}px)`;
-  }
+  updateHighlightsSlider();
+}
 
-  function nextHighlightsSlide() {
-    highlightsIndex = (highlightsIndex + 1) % highlightsSlides.length;
-    updateHighlightsSlider();
-  }
+if (highlightsNext) {
+  highlightsNext.addEventListener('click', nextHighlightsSlide);
+}
 
-  if (highlightsNext) {
-    highlightsNext.addEventListener('click', nextHighlightsSlide);
-  }
+if (highlightsTrack && highlightsSlides.length) {
+  setHighlightsSlideWidth();
+  updateHighlightsSlider();
 
-  if (highlightsTrack && highlightsSlides.length) {
+  window.addEventListener('resize', () => {
+    highlightsIndex = 0;
     setHighlightsSlideWidth();
     updateHighlightsSlider();
-    window.addEventListener('resize', () => {
-      setHighlightsSlideWidth();
-      updateHighlightsSlider();
-    });
-  }
+  });
+
+}
 });
+
+
